@@ -118,7 +118,7 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="open-search">
                             <Link to='/search' className='search-books'
-                                  onClick={() => this.setState({books: []})}>Add a book</Link>
+                                  onClick={() => this.setState({books: [], query: ''})}>Add a book</Link>
                         </div>
                     </div>
                 )}/>
