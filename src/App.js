@@ -17,9 +17,10 @@ class BooksApp extends React.Component {
          * pages, as well as provide a good URL they can bookmark and share.
          */
         books: [],
+        booksTemp: [],
         query: '',
         showSearchPage: false
-    }
+    };
 
 
     componentDidMount() {
@@ -32,7 +33,7 @@ class BooksApp extends React.Component {
 
     reload() {
         getAll().then((books) => {
-            this.setState({books})
+            this.setState({books: books})
         })
     }
 
@@ -42,13 +43,28 @@ class BooksApp extends React.Component {
         });
     }
 
+    checkKey(mapOfBooks, book){
+        if(mapOfBooks.has(book.id)) {
+            mapOfBooks.set(book.id, book)
+        }
+    }
+
+    compareBooks(bookTemps, books){
+        let mapOfBooks = new Map();
+        books.map((book) => mapOfBooks.set(book.id, book));
+        bookTemps.map((book) => this.checkKey(mapOfBooks, book));
+        let tempArray = [];
+        Array.from(mapOfBooks.keys()).map((key) => tempArray.push(mapOfBooks.get(key)));
+        this.setState({books: tempArray});
+    }
+
     updateQuery(query) {
         this.setState({
             query: query.trim()
         });
         search(query).then((books) => {
             if (books !== undefined && books.constructor === Array) {
-                this.setState({books: books});
+                this.compareBooks(this.state.booksTemp, books);
             } else {
                 this.setState({books: []});
             }
@@ -118,7 +134,7 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="open-search">
                             <Link to='/search' className='search-books'
-                                  onClick={() => this.setState({books: [], query: ''})}>Add a book</Link>
+                                  onClick={() => this.setState({booksTemp: this.state.books, books: [], query: ''})}>Add a book</Link>
                         </div>
                     </div>
                 )}/>
