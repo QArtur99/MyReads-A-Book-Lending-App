@@ -26,7 +26,11 @@ class BooksApp extends React.Component {
     componentDidMount() {
         if (!window.location.href.includes('search')) {
             getAll().then((books) => {
-                this.setState({books})
+                this.setState({books: books})
+            })
+        }else{
+            getAll().then((books) => {
+                this.setState({booksTemp: books})
             })
         }
     }
